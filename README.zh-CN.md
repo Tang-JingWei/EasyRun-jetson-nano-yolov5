@@ -1,9 +1,8 @@
 <div align="center">
   <p>
     <a align="center" href="https://ultralytics.com/yolov5" target="_blank">
-      <img width="100%" src="https://raw.githubusercontent.com/ultralytics/assets/main/yolov5/v70/splash.png"></a>
+      <img width="100%" src="https://gitee.com/JingWei1234/project-picture/blob/master/naon%20yolo.png"></a>
   </p>
-[英文](README.md)|[简体中文](README.zh-CN.md)<br>
 </div>
 
 

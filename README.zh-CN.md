@@ -52,7 +52,7 @@ git clone https://gitee.com/JingWei1234/easy-run-jetson-nano-yolov5.git
 
 #### 3.2、将步骤2训练好的模型文件 ```.pt```和数据文件```.yaml```复制分别传输到 ```weights```文件夹、```data```文件夹下
 
-#### 3.3、根据项目根目录下的```my_abc.py```脚本中提示内容修改
+#### 3.3、根据项目根目录下的```my_detect.py```脚本中提示内容修改
 
 ```python
 '''

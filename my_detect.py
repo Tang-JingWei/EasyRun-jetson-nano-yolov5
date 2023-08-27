@@ -1,4 +1,9 @@
 # -*- coding: GBK -*-
+
+# @Author  : 哈哈的康庄大道
+# @Bilibili: https://space.bilibili.com/649879623?spm_id_from=333.1007.0.0
+# @Tip: 引用请标明出处，谢谢
+
 import threading
 import struct
 import time
@@ -11,16 +16,6 @@ import sys
 from pathlib import Path
 
 import torch
-
-
-# 导入串口包
-sys.path.append("/home/uav/uav-projects/")
-import USB1
-# 使用GPIO反转LED外设
-import numpy as np
-from gpio import my_gpio
-led_time_cnt = 0
-led_toggle = True
 
 
 FILE = Path(__file__).resolve() 
@@ -37,7 +32,7 @@ from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, smart_inference_mode
 
 
-# YOLOv5 data pack
+# YOLOv5 data pack 数据打包
 def yolo_dataPack(datas):
     data = struct.pack("<bbhb", 
                             0x13,
@@ -51,8 +46,8 @@ def yolo_dataPack(datas):
 '''
 使用说明
     进行特定检测任务，需要注意的参数：
-    1. weights: 将权重文件复制进weights文件夹，参数填入自己的权重文件路径
-    2. data: 填入dataset的yaml文件，此文件指定了各类检测对象
+    1. weights: 将权重文件复制进weights文件夹；参数填入自己的权重文件路径
+    2. data: 将数据文件复制进data文件夹；填入dataset的yaml文件，此文件指定了各类检测对象
     3. max_det: 最大检测对象数
     4. classes: 可以过滤筛选检测对象，None表示无筛选
     ...
@@ -83,12 +78,15 @@ def yolov5_detect(
     # imgsz = check_img_size(imgsz, s=stride)  # check image size
     # model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
 
-    # Get the VideoCapture Object
+    # 获得 VideoCapture 对象
     capture = cv2.VideoCapture(0)
 
     dt = (Profile(), Profile(), Profile())
 
+    # 死循环
     while True:
+    
+        # 通过 VideoCapture 对象 read 一张图片
         ret, frame = capture.read()
 
         # 1. 按比例缩小图片
@@ -100,7 +98,8 @@ def yolov5_detect(
         newsize = [320, 256]  # 需要被32整除
         frame = cv2.resize(frame, newsize)
 
-        height, width, channels = frame.shape # 获取 宽高
+        # 获取 宽高
+        height, width, channels = frame.shape 
 
         img = torch.from_numpy(frame).to(device)
         img = img.half() if model.fp16 else img.float()  # uint8 to fp16/32
@@ -131,8 +130,8 @@ def yolov5_detect(
                 #     n = (det[:, -1] == c).sum()  # detections per class
                 #     s += str(n.item()) + ' ' + str(names[int(c)]) + ' '  # add to string
 
-                # Write results
-                for *xyxy, conf, cls in reversed(det):  # ???????§????????
+                # Write results 处理每一张图片
+                for *xyxy, conf, cls in reversed(det):
                     # print("[det] ",det.detach().cpu().numpy())
                     c = int(cls)  # integer class
                     label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
@@ -145,26 +144,18 @@ def yolov5_detect(
                     detect_width = int(xywh[2]*width)
                     detect_height = int(xywh[3]*width)
                     print("[Objetcts] ","class:",c,names[c], "conf:",int(conf*100),"%", " cx:", detect_cx, " cy:", detect_cy)
+                    
                     sendInfo = c+1  # 发送数据为：类型c+1
-                    # objs.append([c,int(conf*100),detect_cx,detect_cy])
                     # COMM.write([c,int(conf*100),detect_cx,detect_cy])  # To Do: 百分比传输
             else:
                 sendInfo = 0  #未检测到 发送0
             LOGGER.info(f"{'[Inference Time] '}{dt[1].dt * 1E3:.1f}ms")  # 推理时间打印
             print()
 
-        # 串口发送数据
-        send_data = yolo_dataPack(sendInfo)
-        USB1.COMM.write(send_data)
-        time.sleep(0.001)
-
-        # LED反转提示正在发送数据，线程正常执行
-        global led_toggle, led_time_cnt
-        led_time_cnt = led_time_cnt + 1
-        if led_time_cnt >= 5:
-            led_time_cnt = 0
-            led_toggle = np.invert(led_toggle)
-            #my_gpio.set_gpio_out(16, led_toggle)
+        # USB1发送数据 
+        send_data = yolo_dataPack(sendInfo) #封装sendInfo
+        # USB1.COMM.write(send_data)
+        # time.sleep(0.001)
 
         # 显示图片
         # cv2.imshow('yolo detect by TangJW', frame)
@@ -175,9 +166,10 @@ def yolov5_detect(
         # return len(det), det
 
 
+# 可以在其他.py脚本中引用
 def thread_yolo():
     try:
-        print("[Thread Run] ==> YOLO Number Detect")
+        print("[Thread Run] ==> YOLO Detect")
         yolov5_detect()
     except Exception as e:
         print(e)

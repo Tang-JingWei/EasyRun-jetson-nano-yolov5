@@ -1,0 +1,9 @@
+# 图片存放的地址
+train: ../damageRoad/images #此处是/而不是\
+val: ../damageRoad/images #此处是/而不是\
+#test: ../damageRoad/test.txt #此处是/而不是\
+
+# Classes
+nc: 9  # number of classes 数据集类别数量
+
+names: ['D00','D01','D10','D11','D20','D40','D43','D44','D50']  # class names 数据集类别名称，注意和标签的顺序对应

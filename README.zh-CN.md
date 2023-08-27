@@ -36,13 +36,13 @@
 
 ### 2、训练自己的数据集
 
-有关训练模型的教程推荐：
+有关训练YOLOv5模型的教程推荐：
 
 [YOLOv5训练自己的数据集详解](https://blog.csdn.net/weixin_55073640/article/details/122874005)。
 
 
 
-### 3、Easy-Yolov5
+### 3、Easy-Yolov5 RUNS!
 
 #### 3.1、Jetson nano下克隆本项目
 

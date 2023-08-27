@@ -1,7 +1,7 @@
 <div align="center">
   <p>
     <a align="center" href="https://ultralytics.com/yolov5" target="_blank">
-      <img width="100%" src="https://gitee.com/JingWei1234/project-picture/blob/master/naon%20yolo.png"></a>
+      <img width="100%" src="https://gitee.com/JingWei1234/project-picture/raw/master/naon%20yolo.png"></a>
   </p>
 </div>
 

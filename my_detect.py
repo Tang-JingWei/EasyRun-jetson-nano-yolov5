@@ -54,19 +54,20 @@ def yolo_dataPack(datas):
 '''
 @smart_inference_mode()
 def yolov5_detect(
-        weights=ROOT /  'weights/my_abc.pt',  # model.pt path(s)
-        data=ROOT / 'data/my_abc.yaml',  # dataset.yaml path
+        weights=ROOT /  'weights/car.pt',  # model.pt path(s)
+        data=ROOT / 'data/car.yaml',  # dataset.yaml path
         conf_thres=0.5,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
-        max_det=1,  # maximum detections per image
+        max_det=100,  # maximum detections per image
         device='',  # cuda device, i.e. 0 or 0,1,2,3 or cpu
         classes=None,  # filter by class: --class 0, or --class 0 2 3
+        show=True,  # 实时检测画面(关闭会增加一些帧率)
         agnostic_nms=False,  # class-agnostic NMS
         augment=False,  # augmented inference
         visualize=False,  # visualize features
-        line_thickness=3,  # bounding box thickness (pixels)
-        hide_labels=False,  # hide labels
-        hide_conf=False,  # hide confidences
+        line_thickness=1,  # bounding box thickness (pixels) 框厚度
+        hide_labels=False,  # hide labels 关闭标签文字
+        hide_conf=False,  # hide confidences 关闭可信度
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
 ):
@@ -79,7 +80,7 @@ def yolov5_detect(
     # model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
 
     # 获得 VideoCapture 对象
-    capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture("C:\\Users\\Lenovo\\Videos\\car_mp4\\park5.mp4")
 
     dt = (Profile(), Profile(), Profile())
 
@@ -90,9 +91,9 @@ def yolov5_detect(
         ret, frame = capture.read()
 
         # 1. 按比例缩小图片
-        #height, width = frame.shape[:2]
-        #newsize = check_img_size(list([width/1, height/1]))
-        #frame = cv2.resize(frame, newsize)
+        # height, width = frame.shape[:2]
+        # newsize = check_img_size(list([width/1, height/1]))
+        # frame = cv2.resize(frame, newsize)
 
         # 2. 指定大小缩小图片
         newsize = [320, 256]  # 需要被32整除
@@ -158,9 +159,10 @@ def yolov5_detect(
         # time.sleep(0.001)
 
         # 显示图片
-        # cv2.imshow('yolo detect by TangJW', frame)
-        # if cv2.waitKey(1) == ord('q'):
-        #     break
+        if show is True:
+            cv2.imshow('yolo detect by TangJW', frame)
+            if cv2.waitKey(1) == ord('q'):
+                break
 
         # 返回
         # return len(det), det
